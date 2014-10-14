@@ -4,5 +4,15 @@
 # dist folder
 dist
 
+# src folders
+booking.api/bin
+booking.api/obj
+
+booking.dal/bin
+booking.dal/obj
+
+booking.tests/bin
+booking.tests/obj
+
 # dependencies
-node_modules
+packages
