@@ -1,0 +1,8 @@
+# temp folders
+.tmp
+
+# dist folder
+dist
+
+# dependencies
+node_modules
