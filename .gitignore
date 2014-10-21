@@ -16,3 +16,6 @@ booking.tests/obj
 
 # dependencies
 packages
+
+# files
+*.suo
