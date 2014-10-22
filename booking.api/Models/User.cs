@@ -7,6 +7,14 @@ namespace booking.api.Models
 {
     public class User
     {
+        public User()
+        {
+            username = "";
+            email = "";
+            role = "";
+            name = "";
+        }
+
         public string username { get; set; }
 
         public string email { get; set; }

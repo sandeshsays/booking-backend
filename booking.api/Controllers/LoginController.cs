@@ -19,8 +19,6 @@ namespace booking.api.Controllers
     )]
     public class LoginController : ApiController
     {
-        User userr;
-
         [HttpPost]
         [Route("login")]
         public async Task<HttpResponseMessage> Login(Login user)
@@ -31,12 +29,12 @@ namespace booking.api.Controllers
             {
                 name = "Michael Dougall",
                 email = "laheen@gmail.com",
-                role = "admin",
+                role = "user",
                 token = "213kujghaskdjhJKHSADKJHasd",
                 username = user.username
             };
 
-            this.userr = authenticatedUser as User;
+            UserSingleton.Instance().User = authenticatedUser;
 
             return Request.CreateResponse(HttpStatusCode.OK, authenticatedUser);
         }
@@ -47,7 +45,7 @@ namespace booking.api.Controllers
         {
             await Task.Delay(500);
 
-            userr = new User();
+            UserSingleton.Instance().User = new AuthenticatedUser();
 
             return Request.CreateResponse(HttpStatusCode.OK, "Logged out");
         }
@@ -58,7 +56,40 @@ namespace booking.api.Controllers
         {
             await Task.Delay(500);
 
-            return Request.CreateResponse(HttpStatusCode.OK, userr);
+            return Request.CreateResponse(HttpStatusCode.OK, UserSingleton.Instance().User);
+        }
+    }
+
+    public class UserSingleton
+    {
+        static UserSingleton instance;
+
+        public static UserSingleton Instance()
+        {
+            if (instance == null)
+            {
+                instance = new UserSingleton();
+            }
+
+            return instance;
+        }
+
+        AuthenticatedUser _user;
+        public AuthenticatedUser User 
+        { 
+            get 
+            {
+                if (_user == null)
+                {
+                    _user = new AuthenticatedUser();
+                }
+
+                return _user;
+            }
+            set
+            {
+                _user = value;
+            } 
         }
     }
 }
