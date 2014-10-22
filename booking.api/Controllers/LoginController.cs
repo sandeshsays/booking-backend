@@ -29,7 +29,7 @@ namespace booking.api.Controllers
             {
                 name = "Michael Dougall",
                 email = "laheen@gmail.com",
-                role = "user",
+                role = UserRoles.admin.ToString(),
                 token = "213kujghaskdjhJKHSADKJHasd",
                 username = user.username
             };
@@ -91,5 +91,11 @@ namespace booking.api.Controllers
                 _user = value;
             } 
         }
+    }
+
+    public enum UserRoles
+    {
+        user,
+        admin
     }
 }
