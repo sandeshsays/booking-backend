@@ -27,11 +27,15 @@ namespace booking.api.Controllers
 
             var authenticatedUser = new AuthenticatedUser
             {
-                name = "Michael Dougall",
-                email = "laheen@gmail.com",
-                role = UserRoles.admin.ToString(),
-                token = "213kujghaskdjhJKHSADKJHasd",
-                username = user.username
+                user = new User
+                {
+                    name = "Michael Dougall",
+                    email = "laheen@gmail.com",
+                    role = UserRoles.admin.ToString(),
+                    username = user.username
+                },
+ 
+                token = "213kujghaskdjhJKHSADKJHasd"
             };
 
             UserSingleton.Instance().User = authenticatedUser;
@@ -55,6 +59,9 @@ namespace booking.api.Controllers
         public async Task<HttpResponseMessage> UserDetails()
         {
             await Task.Delay(500);
+
+            var sup = UserSingleton.Instance().User;
+            sup.token = "";
 
             return Request.CreateResponse(HttpStatusCode.OK, UserSingleton.Instance().User);
         }
