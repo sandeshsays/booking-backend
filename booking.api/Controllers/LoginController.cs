@@ -60,10 +60,23 @@ namespace booking.api.Controllers
         {
             await Task.Delay(500);
 
-            var sup = UserSingleton.Instance().User;
-            sup.token = "";
+            if (UserSingleton.Instance().User.token == "")
+            {
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "please login");
+            }
 
-            return Request.CreateResponse(HttpStatusCode.OK, UserSingleton.Instance().User);
+            var newuser = new AuthenticatedUser
+            {
+                user = new User
+                {
+                    email = UserSingleton.Instance().User.user.email,
+                    name = UserSingleton.Instance().User.user.name,
+                    role = UserSingleton.Instance().User.user.role,
+                    username = UserSingleton.Instance().User.user.username
+                }
+            };
+
+            return Request.CreateResponse(HttpStatusCode.OK, newuser);
         }
     }
 

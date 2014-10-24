@@ -29,6 +29,22 @@ namespace booking.api.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, criteria);
         }
+
+        [HttpPost]
+        [Route("image")]
+        public async Task<HttpResponseMessage> UploadImage(object imageAsUrl)
+        {
+            await Task.Delay(2000);
+
+            // test for failure as well
+
+            return Request.CreateResponse(HttpStatusCode.OK, new ImageMetaData { Id = "1234" });
+        }
+
+        class ImageMetaData
+        {
+            public string Id { get; set; }
+        }
     }
 
     public class CriteriaSingleton
