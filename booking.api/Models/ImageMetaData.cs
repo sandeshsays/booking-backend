@@ -5,9 +5,8 @@ using System.Web;
 
 namespace booking.api.Models
 {
-    public class Image
+    public class ImageMetaData
     {
-        public string FileName { get; set; }
-        public List<Byte> Bytes { get; set; }
+        public string Id { get; set; }
     }
 }

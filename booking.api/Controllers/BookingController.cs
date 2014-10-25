@@ -41,15 +41,69 @@ namespace booking.api.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, new ImageMetaData { Id = "1234" });
         }
 
-        class ImageMetaData
+        [HttpGet]
+        [Route("criterias")]
+        public async Task<HttpResponseMessage> GetCriterias()
         {
-            public string Id { get; set; }
+            await Task.Delay(500);
+
+            return Request.CreateResponse(HttpStatusCode.OK, CriteriaSingleton.Instance().GetAllCriterias());
+        }
+
+        [HttpGet]
+        [Route("criteria")]
+        public async Task<HttpResponseMessage> GetCriteria(int id)
+        {
+            await Task.Delay(250);
+
+            return Request.CreateResponse(HttpStatusCode.OK, CriteriaSingleton.Instance().GetCriteria(id));
         }
     }
 
     public class CriteriaSingleton
     {
         static CriteriaSingleton instance;
+
+        List<Criteria> criterias =
+            new List<Criteria> 
+                { 
+                    new Criteria
+                    {
+                        Id = 1,
+                        Description = "Awesome set of tennis courts location at winston hills",
+                        Images = new List<ImageMetaData>
+                        {
+                            new ImageMetaData
+                            {
+                                Id = "234"
+                            },
+                            new ImageMetaData
+                            {
+                                Id = "234"
+                            }
+                        },
+                        Location = "Winston Hills",
+                        Name = "Tennis courts at winston hills"
+                    },
+                    new Criteria
+                    {
+                        Id = 2,
+                        Description = "Squash courts man",
+                        Images = new List<ImageMetaData>
+                        {
+                            new ImageMetaData
+                            {
+                                Id = "222"
+                            },
+                            new ImageMetaData
+                            {
+                                Id = "111"
+                            }
+                        },
+                        Location = "Macquarie University",
+                        Name = "Squash courts at mqu"
+                    }
+                };
 
         public static CriteriaSingleton Instance()
         {
@@ -59,6 +113,23 @@ namespace booking.api.Controllers
             }
 
             return instance;
+        }
+
+        public void SaveCriteria(int id, Criteria criteria)
+        {
+            var something = criterias.Where(x => x.Id == id).FirstOrDefault();
+
+            something = criteria;
+        }
+
+        public Criteria GetCriteria(int id)
+        {
+            return criterias.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        public List<Criteria> GetAllCriterias()
+        {
+            return criterias;
         }
     }
 }
