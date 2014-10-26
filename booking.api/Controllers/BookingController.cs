@@ -1,4 +1,5 @@
-﻿using booking.api.Models;
+﻿using booking.api.Interfaces;
+using booking.api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,12 +52,32 @@ namespace booking.api.Controllers
         }
 
         [HttpGet]
-        [Route("criteria")]
-        public async Task<HttpResponseMessage> GetCriteria(int id)
+        [Route("criteria/{slug}")]
+        public async Task<HttpResponseMessage> GetCriteria(string slug)
         {
             await Task.Delay(250);
 
-            return Request.CreateResponse(HttpStatusCode.OK, CriteriaSingleton.Instance().GetCriteria(id));
+            var criteria = CriteriaSingleton.Instance().GetCriteria(slug);
+            
+            if (criteria == null) {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "bro it doesnt exist");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, criteria);
+        }
+
+        [HttpGet]
+        [Route("criteria/{criteria}/{bookable}")]
+        public async Task<HttpResponseMessage> GetBookable(string criteria, string bookable)
+        {
+            await Task.Delay(200);
+
+            return Request.CreateResponse(HttpStatusCode.OK, new Bookable
+                            {
+                                Id = 1234,
+                                Name = "Court 1",
+                                Slug = bookable
+                            });
         }
     }
 
@@ -65,12 +86,17 @@ namespace booking.api.Controllers
         static CriteriaSingleton instance;
 
         List<Criteria> criterias =
+
             new List<Criteria> 
                 { 
                     new Criteria
                     {
                         Id = 1,
                         Description = "Awesome set of tennis courts location at winston hills",
+                        DisplayImage = new ImageMetaData
+                        {
+                            Id = "2314"
+                        },
                         Images = new List<ImageMetaData>
                         {
                             new ImageMetaData
@@ -83,12 +109,32 @@ namespace booking.api.Controllers
                             }
                         },
                         Location = "Winston Hills",
-                        Name = "Tennis courts at winston hills"
+                        Name = "Tennis courts at winston hills",
+                        Slug = "tennis-at-winston-hills",
+                        Bookables = new List<Bookable>
+                        {
+                            new Bookable
+                            {
+                                Id = 1234,
+                                Name = "Court 1",
+                                Slug = "court-1"
+                            },
+                            new Bookable
+                            {
+                                Id = 122334,
+                                Name = "Court 2",
+                                Slug = "court-2"
+                            }
+                        }
                     },
                     new Criteria
                     {
                         Id = 2,
                         Description = "Squash courts man",
+                        DisplayImage = new ImageMetaData
+                        {
+                            Id = "2342"
+                        },
                         Images = new List<ImageMetaData>
                         {
                             new ImageMetaData
@@ -101,7 +147,23 @@ namespace booking.api.Controllers
                             }
                         },
                         Location = "Macquarie University",
-                        Name = "Squash courts at mqu"
+                        Name = "Squash courts at mqu",
+                        Slug = "squash-at-mqu",
+                        Bookables = new List<Bookable>
+                        {
+                            new Bookable
+                            {
+                                Id = 2,
+                                Name = "Court 69",
+                                Slug = "court-69"
+                            },
+                            new Bookable
+                            {
+                                Id = 33,
+                                Name = "Court 23",
+                                Slug = "court-23"
+                            }
+                        }
                     }
                 };
 
@@ -122,9 +184,18 @@ namespace booking.api.Controllers
             something = criteria;
         }
 
-        public Criteria GetCriteria(int id)
+        public Criteria GetCriteria(string slug)
         {
-            return criterias.Where(x => x.Id == id).FirstOrDefault();
+            return criterias.Where(x => x.Slug == slug).First();
+        }
+
+        public IBookableData GetBookable(string slug, long id)
+        {
+            var bookable = criterias[0].Bookables[0];
+
+
+
+            return bookable as IBookableData;
         }
 
         public List<Criteria> GetAllCriterias()
