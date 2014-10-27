@@ -94,12 +94,13 @@
     </Compile>
     <Compile Include="Interfaces\IBookableData.cs" />
     <Compile Include="Interfaces\IBookableMetaData.cs" />
-    <Compile Include="Models\AuthenticatedUser.cs" />
-    <Compile Include="Models\Bookable.cs" />
-    <Compile Include="Models\Criteria.cs" />
+    <Compile Include="Models\User\AuthenticatedUser.cs" />
+    <Compile Include="Models\Bookable\Bookable.cs" />
+    <Compile Include="Models\Bookable\BookableBooking.cs" />
+    <Compile Include="Models\Criteria\Criteria.cs" />
     <Compile Include="Models\ImageMetaData.cs" />
-    <Compile Include="Models\Login.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\User\Login.cs" />
+    <Compile Include="Models\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

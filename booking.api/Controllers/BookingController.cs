@@ -68,22 +68,136 @@ namespace booking.api.Controllers
 
         [HttpGet]
         [Route("criteria/{criteria}/{bookable}")]
-        public async Task<HttpResponseMessage> GetBookable(string criteria, string bookable)
+        public async Task<HttpResponseMessage> GetBookable(string criteria, string bookable, int offset = 0)
         {
             await Task.Delay(200);
 
-            return Request.CreateResponse(HttpStatusCode.OK, new Bookable
-                            {
-                                Id = 1234,
-                                Name = "Court 1",
-                                Slug = bookable
-                            });
+            Bookable book = CriteriaSingleton.Instance().GetBookable(bookable);
+
+            var response = new Bookable
+            {
+                Bookings = book.Bookings
+            };
+
+            return Request.CreateResponse(HttpStatusCode.OK, response);
         }
     }
 
     public class CriteriaSingleton
     {
         static CriteriaSingleton instance;
+
+        List<Bookable> bookables = new List<Bookable>
+                        {
+                            new Bookable
+                            {
+                                Id = 1234,
+                                Name = "Court 1",
+                                Slug = "court-1",
+                                CriteriaId = 1,
+                                BookableTimePeriod = 30,
+                                Bookings = new List<BookableBooking>
+                                {
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddDays(7),
+                                        Start = DateTime.Now.AddDays(-2),
+                                        Type = BookingType.Restriction
+                                    },
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddHours(2),
+                                        Start = DateTime.Now,
+                                        Type = BookingType.Booking
+                                    }
+                                }
+                            },
+                            new Bookable
+                            {
+                                Id = 122334,
+                                Name = "Court 2",
+                                Slug = "court-2",
+                                CriteriaId = 1,
+                                BookableTimePeriod = 45,
+                                Bookings = new List<BookableBooking>
+                                {
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddDays(7),
+                                        Start = DateTime.Now.AddDays(-2),
+                                        Type = BookingType.Restriction
+                                    },
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddHours(2),
+                                        Start = DateTime.Now,
+                                        Type = BookingType.Booking
+                                    }
+                                }
+                            },
+                            new Bookable
+                            {
+                                Id = 2,
+                                Name = "Court 69",
+                                Slug = "court-69",
+                                CriteriaId = 2,
+                                BookableTimePeriod = 60,
+                                Bookings = new List<BookableBooking>
+                                {
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddDays(7),
+                                        Start = DateTime.Now.AddDays(-2),
+                                        Type = BookingType.Restriction
+                                    },
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddHours(2),
+                                        Start = DateTime.Now,
+                                        Type = BookingType.Booking
+                                    }
+                                }
+                            },
+                            new Bookable
+                            {
+                                Id = 33,
+                                Name = "Court 23",
+                                Slug = "court-23",
+                                CriteriaId = 2,
+                                BookableTimePeriod = 15,
+                                Bookings = new List<BookableBooking>
+                                {
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddDays(7),
+                                        Start = DateTime.Now.AddDays(-2),
+                                        Type = BookingType.Restriction
+                                    },
+                                    new BookableBooking
+                                    {
+                                        ById = "123",
+                                        ByName = "Michael",
+                                        End = DateTime.Now.AddHours(2),
+                                        Start = DateTime.Now,
+                                        Type = BookingType.Booking
+                                    }
+                                }
+                            }
+                        };
 
         List<Criteria> criterias =
 
@@ -110,22 +224,7 @@ namespace booking.api.Controllers
                         },
                         Location = "Winston Hills",
                         Name = "Tennis courts at winston hills",
-                        Slug = "tennis-at-winston-hills",
-                        Bookables = new List<Bookable>
-                        {
-                            new Bookable
-                            {
-                                Id = 1234,
-                                Name = "Court 1",
-                                Slug = "court-1"
-                            },
-                            new Bookable
-                            {
-                                Id = 122334,
-                                Name = "Court 2",
-                                Slug = "court-2"
-                            }
-                        }
+                        Slug = "tennis-at-winston-hills"
                     },
                     new Criteria
                     {
@@ -148,22 +247,7 @@ namespace booking.api.Controllers
                         },
                         Location = "Macquarie University",
                         Name = "Squash courts at mqu",
-                        Slug = "squash-at-mqu",
-                        Bookables = new List<Bookable>
-                        {
-                            new Bookable
-                            {
-                                Id = 2,
-                                Name = "Court 69",
-                                Slug = "court-69"
-                            },
-                            new Bookable
-                            {
-                                Id = 33,
-                                Name = "Court 23",
-                                Slug = "court-23"
-                            }
-                        }
+                        Slug = "squash-at-mqu"
                     }
                 };
 
@@ -186,16 +270,18 @@ namespace booking.api.Controllers
 
         public Criteria GetCriteria(string slug)
         {
-            return criterias.Where(x => x.Slug == slug).First();
+            var crit = criterias.Where(x => x.Slug == slug).First();
+
+            crit.Bookables = bookables.Where(x => x.CriteriaId == crit.Id).ToList();
+
+            return crit;
         }
 
-        public IBookableData GetBookable(string slug, long id)
+        public Bookable GetBookable(string slug)
         {
-            var bookable = criterias[0].Bookables[0];
+            var bookable = bookables.Where(x => x.Slug == slug).FirstOrDefault();
 
-
-
-            return bookable as IBookableData;
+            return bookable;
         }
 
         public List<Criteria> GetAllCriterias()
