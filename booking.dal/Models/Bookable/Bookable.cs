@@ -1,12 +1,11 @@
-﻿using booking.api.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace booking.api.Models
+namespace booking.dal.Models
 {
-    public class Bookable : IBookableMetaData, IBookableData
+    public class Bookable
     {
         public long Id { get; set; }
         public string Name { get; set; }

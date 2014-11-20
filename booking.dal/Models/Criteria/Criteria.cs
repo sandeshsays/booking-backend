@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace booking.api.Models
+namespace booking.dal.Models
 {
     public class Criteria
     {

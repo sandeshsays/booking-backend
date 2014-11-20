@@ -1,6 +1,4 @@
-﻿using booking.api.Interfaces;
-using booking.api.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,25 +6,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using booking.dal.Interfaces;
+using booking.dal.Models;
 
 namespace booking.api.Controllers
 {
-    [RoutePrefix("api/booking")]
     [AllowAnonymous]
-    [EnableCors( // http://www.asp.net/web-api/overview/security/enabling-cross-origin-requests-in-web-api#enable-cors
-        "*", // change to specific sites after development
-        "*",
-        "*"
-    )]
-    public class BookingController : ApiController
+    [RoutePrefix("api/booking")]
+    public class BookingController : BaseController<IBookableService>
     {
+        public BookingController(IBookableService service)
+            : base(service)
+        {
+        }
+
         [HttpPost]
         [Route]
         public async Task<HttpResponseMessage> CreateCriteria(Criteria criteria)
         {
             await Task.Delay(750);
-
-
 
             return Request.CreateResponse(HttpStatusCode.OK, criteria);
         }
